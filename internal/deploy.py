@@ -10,48 +10,25 @@ account = Account(private_key="c4e0d95cc91d4cd72c68c9cf58eec49eb9e5c2cbc63fec61e
 print(account)
 code = open("HelloWorld.scilla").read()
 init_params = [
-    { 
-        "vname" : "_scilla_version",
-        "type" : "Uint32",
-        "value" : "0"
-    },
-    {
-        "vname" : "name",
-        "type" : "String",
-        "value" : "ERC777"
-    },
-    {
-        "vname" : "symbol",
-        "type" : "String",
-        "value" : "Merkalise"
-    },
-    {
-        "vname" : "totalSupply",
-        "type" : "Uint128",
-        "value" : "1000"
-    },
-    {
-        "vname" : "owner",
-        "type" :  "ByStr20",
-        "value" :  "0x263C4CA003235AF83C4F4BC065D00D4A67FFB617"
-    },
-    {
-        "vname" : "granularity",
-        "type" : "Uint128",
-        "value" : "4"
-    },
-    {
-        "vname" : "_creation_block",
-        "type" : "BNum",
-        "value" : "100"
-    }
-]
+      {
+        "vname": "_scilla_version",
+        "type": "Uint32",
+        "value": "0",
+      },
+      {
+        "vname": "owner",
+        "type": "ByStr20",
+        # NOTE: all byte strings passed to Scilla contracts _must_ be prefixed with 0x. Failure to do so will result in the network rejecting the transaction while consuming gas!
+        "value": "0xafdb4c759eff9d894af75abfb6bde2c7fc3623a9",
+      }
+    ]
 
-contract = Contract.new_from_code(code=code)
+contract = Contract.new_from_code(code)
 print(contract)
 
 # set account before deploy
 contract.account = account
 
-contract.deploy(init_params=init_params, gas_limit=1000000,timeout=2200, sleep=10)
+# contract.deploy(init_params=init_params, gas_limit=10000000,timeout=2200, sleep=10)
+contract.deploy(timeout=300, sleep=10)
 assert contract.status == Contract.Status.Deployed
